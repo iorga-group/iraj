@@ -11,6 +11,7 @@
     "raaj-security-interceptor": "~1.2.0",
     "raaj-progress-interceptor": "~1.2.0",
     "raaj-message-interceptor": "~1.2.0",
+    "raaj-message-service": "~1.2.0",
     "raaj-table-service": "~1.2.0"
   },
   "resolutions": {

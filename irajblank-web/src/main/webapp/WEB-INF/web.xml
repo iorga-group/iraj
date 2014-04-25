@@ -9,12 +9,16 @@
 	<listener>
 		<listener-class>org.jboss.weld.environment.servlet.Listener</listener-class>
 	</listener>
+<!-- 
 	<listener>
 		<listener-class>com.iorga.irajblank.bootstrap.DataInitializer</listener-class>
 	</listener>
+-->
+<!-- 
 	<listener>
 		<listener-class>org.jboss.resteasy.plugins.server.servlet.ResteasyBootstrap</listener-class>
 	</listener>
+ -->
 	<!-- 
 	<listener>
 		<listener-class>com.iorga.irajblank.data.EntityManagerFactoryServletContextListener</listener-class>
@@ -24,21 +28,22 @@
 	</listener>
 	 -->
 
-	<servlet>
+<!-- 	<servlet>
 		<servlet-name>Resteasy</servlet-name>
 		<servlet-class>org.jboss.resteasy.plugins.server.servlet.HttpServletDispatcher</servlet-class>
-	</servlet>
+	</servlet> -->
 
-	<context-param>
+<!-- 	<context-param>
 		<param-name>resteasy.injector.factory</param-name>
 		<param-value>org.jboss.resteasy.cdi.CdiInjectorFactory</param-value>
-	</context-param>
+	</context-param> -->
 
-	<servlet-mapping>
+<!-- 	<servlet-mapping>
 		<servlet-name>Resteasy</servlet-name>
 		<url-pattern>/api/*</url-pattern>
-	</servlet-mapping>
-	
+	</servlet-mapping> -->
+
+<!-- 
 	<context-param>
 		<param-name>resteasy.scan</param-name>
 		<param-value>true</param-value>
@@ -51,6 +56,8 @@
 		<param-name>resteasy.servlet.mapping.prefix</param-name>
 		<param-value>/api</param-value>
 	</context-param>
+ -->
+
 	<context-param>
 		<param-name>resteasy.media.type.mappings</param-name>
 		<param-value>json : application/json, html : text/html, xml : application/xml, fastinfoset : application/fastinfoset</param-value>

@@ -117,20 +117,21 @@ public class UserService extends JPAEntityService<User, Integer> {
 		return userSearchQuery.search(QUser.user, userSearchRequest, userSearchRequest.getSearchScope(), getEntityManager());
 	}
 
-	public Integer save(final UserSaveRequest usar) throws FunctionalException {
+	public Integer save(final UserSaveRequest request) throws FunctionalException {
 		User user = new User();
 		boolean newUser = true;
-		if (usar.getUserId() != 0) {
-			user = this.find(usar.getUserId());
+		final Integer userId = request.getUserId();
+		if (userId != null && userId != 0) {
+			user = this.find(userId);
 			newUser = false;
 		}
 
-		user.setLogin(usar.getLogin());
-		user.setPassword(usar.getPassword());
-		user.setLastName(usar.getLastName());
-		user.setFirstName(usar.getFirstName());
-		user.setActive(usar.getActive());
-		user.setProfile(profileService.getReference(usar.getProfileId()));
+		user.setLogin(request.getLogin());
+		user.setPassword(request.getPassword());
+		user.setLastName(request.getLastName());
+		user.setFirstName(request.getFirstName());
+		user.setActive(request.getActive());
+		user.setProfile(profileService.getReference(request.getProfileId()));
 
 		if (newUser) {
 			this.create(user);

@@ -28,6 +28,7 @@ import javax.ws.rs.ext.Provider;
 
 import org.codehaus.jackson.JsonFactory;
 import org.codehaus.jackson.JsonGenerator;
+import org.jboss.resteasy.api.validation.ConstraintType.Type;
 import org.jboss.resteasy.api.validation.ResteasyConstraintViolation;
 import org.jboss.resteasy.api.validation.ResteasyViolationException;
 
@@ -55,14 +56,18 @@ public class ResteasyViolationExceptionMapper implements ExceptionMapper<Resteas
 					jsonGenerator.writeStartObject();
 					jsonGenerator.writeStringField("type", "error");
 					jsonGenerator.writeStringField("message", violation.getMessage());
-					jsonGenerator.writeArrayFieldStart("propertyPath");
-					String[] pathElems = violation.getPath().split("\\.");
-					boolean first = true;
-					for (String pathElem : pathElems) {
-						if (!first) {
-							jsonGenerator.writeString(pathElem);
-						} else {
-							first = false;
+
+					if (Type.PARAMETER.equals(violation.getConstraintType())) {
+						jsonGenerator.writeArrayFieldStart("propertyPath");
+
+						String[] pathElems = violation.getPath().split("\\.");
+						int index = 1;
+						for (String pathElem : pathElems) {
+							if (index > 2) {
+								jsonGenerator.writeString(pathElem);
+							} else {
+								index++;
+							}
 						}
 					}
 					jsonGenerator.writeEndArray();

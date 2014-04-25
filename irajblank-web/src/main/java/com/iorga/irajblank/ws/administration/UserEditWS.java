@@ -5,14 +5,13 @@ import java.util.List;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.validation.Valid;
+import javax.validation.executable.ValidateOnExecution;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.StreamingOutput;
-
-import org.jboss.resteasy.plugins.validation.hibernate.ValidateRequest;
 
 import com.iorga.iraj.annotation.ContextParam;
 import com.iorga.iraj.annotation.ContextPath;
@@ -27,7 +26,6 @@ import com.iorga.irajblank.service.UserService;
 @SuppressWarnings("unused")
 @Path("/administration/userEdit")
 @ApplicationScoped
-@ValidateRequest
 public class UserEditWS {
 	@Inject
 	private UserService userService;
@@ -40,20 +38,14 @@ public class UserEditWS {
 
 	@ContextParam(User.class)
 	public static class FindTemplate {
-		private Integer userId;
-
-		private String login;
-
-		private String password;
-
-		private String lastName;
-
-		private String firstName;
-
+		Integer userId;
+		String login;
+		String password;
+		String lastName;
+		String firstName;
 		@ContextPath("profile.id")
-		private Integer profileId;
-
-		private Boolean active;
+		Integer profileId;
+		Boolean active;
 	}
 	@GET
 	@Path("/find/{id}")
@@ -77,6 +69,7 @@ public class UserEditWS {
 
 	@POST
 	@Path("/save")
+	@ValidateOnExecution
 	public Integer save(@Valid final UserSaveRequest userSaveRequest) throws FunctionalException {
 		return userService.save(userSaveRequest);
 	}

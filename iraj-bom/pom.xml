@@ -50,13 +50,13 @@
 
 		<version.guava>16.0.1</version.guava>
 
-		<version.weld>1.1.18.Final</version.weld>
+		<version.weld>2.2.0.SP1</version.weld>
 
-		<version.hibernate>4.3.4.Final</version.hibernate>
-		<version.hibernate-validator>5.1.0.Final</version.hibernate-validator>
+		<version.hibernate>4.3.5.Final</version.hibernate>
+		<version.hibernate-validator>5.0.3.Final</version.hibernate-validator>
 		<version.flyway>2.3.1</version.flyway>
 
-		<version.resteasy>3.0.6.Final</version.resteasy>
+		<version.resteasy>3.0.7.Final</version.resteasy>
 		<version.commons-lang>3.3.1</version.commons-lang>
 		<version.commons-codec>1.9</version.commons-codec>
 		<version.commons-io>2.4</version.commons-io>
@@ -67,6 +67,8 @@
 		
 		<version.junit>4.11</version.junit>
 		<version.mockito>1.9.5</version.mockito>
+		
+		<version.slf4j>1.7.7</version.slf4j>
 		<!-- 
 		<version.jackson>2.1.4</version.jackson>
 		 -->
@@ -225,15 +227,34 @@ encoding/<project>=UTF-8]]>
 				<version>${version.jsoup}</version>
 			</dependency>
 			<dependency>
+				<groupId>org.slf4j</groupId>
+				<artifactId>slf4j-api</artifactId>
+				<version>${version.slf4j}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.slf4j</groupId>
+				<artifactId>slf4j-simple</artifactId>
+				<version>${version.slf4j}</version>
+			</dependency>
+			<dependency>
+				<groupId>javax.validation</groupId>
+				<artifactId>validation-api</artifactId>
+				<version>1.1.0.Final</version>
+				<type>jar</type>
+			</dependency>
+			<dependency>
+				<groupId>org.hibernate</groupId>
+				<artifactId>hibernate-validator</artifactId>
+				<version>${version.hibernate-validator}</version>
+			</dependency>
+
+			<!-- 
+			<dependency>
 				<groupId>org.jboss.resteasy</groupId>
 				<artifactId>resteasy-hibernatevalidator-provider</artifactId>
 				<version>${version.resteasy}</version>
 			</dependency>
-			<dependency>
-				<groupId>org.jboss.resteasy</groupId>
-				<artifactId>resteasy-cdi</artifactId>
-				<version>${version.resteasy}</version>
-			</dependency>
+			 -->
 			
 			<!-- 
 			<dependency>
@@ -243,6 +264,25 @@ encoding/<project>=UTF-8]]>
 			</dependency>
 			 -->
 			<!-- Runtime -->
+			<dependency>
+				<groupId>org.jboss.resteasy</groupId>
+				<artifactId>resteasy-cdi</artifactId>
+				<version>${version.resteasy}</version>
+				<scope>runtime</scope>
+			</dependency>
+			<dependency>
+				<groupId>javax.ejb</groupId>
+				<artifactId>javax.ejb-api</artifactId>
+				<version>3.2</version>
+				<type>jar</type>
+				<scope>runtime</scope>
+			</dependency>
+			<dependency>
+				<groupId>org.hibernate</groupId>
+				<artifactId>hibernate-validator-cdi</artifactId>
+				<version>${version.hibernate-validator}</version>
+				<scope>runtime</scope>
+			</dependency>
 			<!-- Provided -->
 			<dependency>
 				<groupId>com.mysema.querydsl</groupId>

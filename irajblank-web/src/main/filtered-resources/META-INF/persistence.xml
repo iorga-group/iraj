@@ -5,7 +5,7 @@
   version="2.0">
 
   <persistence-unit name="com.iorga.irajblank" transaction-type="RESOURCE_LOCAL">
-  	<provider>org.hibernate.ejb.HibernatePersistence</provider>
+  	<provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
   	<non-jta-data-source>java:/comp/env/jdbc/IrajBlank</non-jta-data-source>
     <properties>
       <property name="hibernate.dialect" value="org.hibernate.dialect.H2Dialect"/>

@@ -38,13 +38,6 @@ public class UserSearchWS {
 		return userService.findAll();
 	}
 
-	@ContextParam(Profile.class)
-	public static class ProfileResponseTemplate {
-		Integer id;
-		String label;
-	}
-
-
 	@ContextParams({
 		@ContextParam(name = "profileList", value = List.class, parameterizedArguments = Profile.class)
 	})

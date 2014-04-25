@@ -27,6 +27,15 @@ Because IRAJ Blank uses an in-memory embedded database engine ([h2](http://h2dat
 
 If you use [Tomcat](http://tomcat.apache.org/), you just have to put it in the TOMCAT_DIR/lib.
 
+You'll have to define the DataSource `jdbc/IrajBlank`. If you use Tomcat, this is done by adding this in your `context.xml` :
+
+```xml
+    <Resource name="jdbc/IrajBlank" auth="Container" type="javax.sql.DataSource"
+              maxActive="100" maxIdle="30" maxWait="10000"
+              username="sa" password="" driverClassName="org.h2.jdbcx.JdbcDataSource"
+              url="jdbc:h2:mem:test;DB_CLOSE_DELAY=-1"/>
+```
+
 ## Build
 
 Deploy irajblank-web on your favorite Java application server (tested with Tomcat 7).

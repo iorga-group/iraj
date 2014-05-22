@@ -4,6 +4,8 @@
   "dependencies": {
     "es5-shim": "~3.4.0",
     "json3": "~3.3.1",
+    "respond": "1.4.2",
+    "html5shiv": "3.7.2",
     "jquery": "1.11.1",
     "angular": "1.2.16",
     "angular-route": "1.2.16",
@@ -23,6 +25,12 @@
       ]
     },
     "es5-shim": {
+      "main": []
+    },
+	"html5shiv": {
+      "main": []
+    },
+    "respond": {
       "main": []
     }
   }

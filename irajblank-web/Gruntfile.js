@@ -57,23 +57,23 @@ module.exports = function (grunt) {
 				]
 			}
 		},
-	    // Empties folders to start fresh
-	    clean: {
-		  webapp: [
-	        'src/main/webapp/lib',
-	        'src/main/webapp/scripts',
-	        'src/main/webapp/templates'
-	      ],
-	      dist: {
-	        files: [{
-	          dot: true,
-	          src: [
-	            '.tmp'
-	          ]
-	        }]
-	      },
-	      server: '.tmp'
-	    },
+		// Empties folders to start fresh
+		clean: {
+			webapp: [
+				'src/main/webapp/lib',
+				'src/main/webapp/scripts',
+				'src/main/webapp/templates'
+			],
+			dist: {
+				files: [{
+					dot: true,
+					src: [
+						'.tmp'
+					]
+				}]
+			},
+			server: '.tmp'
+		},
 		// Uses Compass
 		compass: {
 			options: {

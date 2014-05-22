@@ -50,7 +50,7 @@ module.exports = function (grunt) {
 			}
 		},
 		// Injects Bower dependencies directly in index.html
-		bowerInstall: {
+		wiredep: {
 			target: {
 				src: [
 					'src/main/webapp/index.html'
@@ -244,28 +244,28 @@ module.exports = function (grunt) {
 	});
 	
 	grunt.registerTask('serve', [
-        'clean:webapp',
-        'bower',
-        'concurrent:server',
-        'bowerInstall',
-        'injector',
-        'watch'
+		'clean:webapp',
+		'bower',
+		'concurrent:server',
+		'wiredep',
+		'injector',
+		'watch'
 	]);
 
 	grunt.registerTask('build', [
-        'clean:webapp',
-        'bower',
-        'concurrent:dist',
-        'bowerInstall',
-        'injector',
-        'useminPrepare',
-        'autoprefixer',
-        'ngmin',
-        'concat',
-        'uglify',
-        'cssmin',
-        'usemin',
-        'clean:dist'
+		'clean:webapp',
+		'bower',
+		'concurrent:dist',
+		'wiredep',
+		'injector',
+		'useminPrepare',
+		'autoprefixer',
+		'ngmin',
+		'concat',
+		'uglify',
+		'cssmin',
+		'usemin',
+		'clean:dist'
 	]);
 
 	grunt.registerTask('default', [

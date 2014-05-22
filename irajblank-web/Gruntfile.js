@@ -59,6 +59,11 @@ module.exports = function (grunt) {
 		},
 	    // Empties folders to start fresh
 	    clean: {
+		  webapp: [
+	        'src/main/webapp/lib',
+	        'src/main/webapp/scripts',
+	        'src/main/webapp/templates'
+	      ],
 	      dist: {
 	        files: [{
 	          dot: true,
@@ -239,26 +244,28 @@ module.exports = function (grunt) {
 	});
 	
 	grunt.registerTask('serve', [
-		'bower',
-	    'concurrent:server',
-		'bowerInstall',
-		'injector',
-	    'watch'
+        'clean:webapp',
+        'bower',
+        'concurrent:server',
+        'bowerInstall',
+        'injector',
+        'watch'
 	]);
 
 	grunt.registerTask('build', [
-	    'bower',
-	    'concurrent:dist',
-		'bowerInstall',
-		'injector',
-		'useminPrepare',
-		'autoprefixer',
-		'ngmin',
-		'concat',
-		'uglify',
-		'cssmin',
-		'usemin',
-		'clean:dist'
+        'clean:webapp',
+        'bower',
+        'concurrent:dist',
+        'bowerInstall',
+        'injector',
+        'useminPrepare',
+        'autoprefixer',
+        'ngmin',
+        'concat',
+        'uglify',
+        'cssmin',
+        'usemin',
+        'clean:dist'
 	]);
 
 	grunt.registerTask('default', [

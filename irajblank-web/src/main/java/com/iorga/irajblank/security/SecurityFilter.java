@@ -16,6 +16,6 @@ public class SecurityFilter extends AbstractSecurityWithWebServiceFilter<SimpleS
 	@Override
 	protected SimpleSecurityContext findSecurityContext(final String login) {
 		// Here we will use the login as the accessKeyId and the encrypted password as the secretAccessKey
-		return new SimpleSecurityContext(userService.findPasswordForLogin(login));
+		return new SimpleSecurityContext(login, userService.findPasswordForLogin(login));
 	}
 }

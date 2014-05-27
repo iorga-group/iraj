@@ -19,8 +19,10 @@ package com.iorga.iraj.security;
 import java.io.IOException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
+import java.security.Principal;
 import java.text.ParseException;
 import java.util.Date;
+import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -31,6 +33,7 @@ import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletRequestWrapper;
 import javax.servlet.http.HttpServletResponse;
 
 import org.jboss.resteasy.util.DateUtil;
@@ -50,6 +53,10 @@ public abstract class AbstractSecurityFilter<S extends SecurityContext> implemen
 
 	private final static String BASE64_REGEXP = "(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?";	// Read on http://stackoverflow.com/a/475217/535203
 	private final static Pattern AUTHORIZATION_HEADER_PATTERN = Pattern.compile("^"+SecurityUtils.AUTHORIZATION_HEADER_VALUE_PREFIX+" (\\w+):("+BASE64_REGEXP+")$");
+
+	final static long TIME_SHIFT_ALLOWED_DURATION = 15;
+	final static TimeUnit TIME_SHIFT_ALLOWED_TIME_UNIT = TimeUnit.MINUTES;
+	final static long TIME_SHIFT_ALLOWED_MILLISECONDS = TimeUnit.MILLISECONDS.convert(TIME_SHIFT_ALLOWED_DURATION, TIME_SHIFT_ALLOWED_TIME_UNIT);
 
 	@Override
 	public void init(final FilterConfig filterConfig) throws ServletException {
@@ -85,7 +92,7 @@ public abstract class AbstractSecurityFilter<S extends SecurityContext> implemen
 								final MultiReadHttpServletRequest multiReadHttpRequest = new MultiReadHttpServletRequest(httpRequest);
 								final String serverSignature = SecurityUtils.computeSignature(secretAccessKey, new HttpServletRequestToSign(multiReadHttpRequest));
 								if (serverSignature.equalsIgnoreCase(signature)) {
-									doFilterWhenSecurityOK(httpRequest, httpResponse, chain, multiReadHttpRequest, accessKeyId);
+									doFilterWhenSecurityOK(httpRequest, httpResponse, chain, multiReadHttpRequest, accessKeyId, securityContext);
 								} else {
 									rejectSignature(signature, serverSignature, httpResponse);
 								}
@@ -122,15 +129,20 @@ public abstract class AbstractSecurityFilter<S extends SecurityContext> implemen
 	 */
 	protected abstract S findSecurityContext(String accessKeyId);
 
-	protected void doFilterWhenSecurityOK(final HttpServletRequest httpRequest, final HttpServletResponse httpResponse, final FilterChain chain, final MultiReadHttpServletRequest multiReadHttpRequest, final String accessKeyId) throws IOException, ServletException {
+	protected void doFilterWhenSecurityOK(final HttpServletRequest httpRequest, final HttpServletResponse httpResponse, final FilterChain chain, final MultiReadHttpServletRequest multiReadHttpRequest, final String accessKeyId, final S securityContext) throws IOException, ServletException {
 		// By default, security OK, forward to next filter
-		chain.doFilter(multiReadHttpRequest, httpResponse);
+		chain.doFilter(new HttpServletRequestWrapper(multiReadHttpRequest) {
+			@Override
+			public Principal getUserPrincipal() {
+				return securityContext;
+			}
+		}, httpResponse);
 	}
 
 	protected boolean handleParsedDate(final Date parsedDate, final S securityContext, final HttpServletRequest httpRequest, final HttpServletResponse httpResponse) throws IOException {
 		final Date localDate = new Date();
 		// By default, we check that the time shifting is less than 15mn
-		if (Math.abs(parsedDate.getTime() - localDate.getTime()) > 15 * 60 * 1000) {
+		if (Math.abs(parsedDate.getTime() - localDate.getTime()) > TIME_SHIFT_ALLOWED_MILLISECONDS) {
 			sendError(HttpServletResponse.SC_UNAUTHORIZED, "Date too far from local time", httpResponse, "Got "+parsedDate+", local date is "+localDate);
 			return false;
 		} else {

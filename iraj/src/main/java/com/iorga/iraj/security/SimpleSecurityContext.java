@@ -18,13 +18,20 @@ package com.iorga.iraj.security;
 
 public class SimpleSecurityContext implements SecurityContext {
 	private final String secretAccessKey;
+	private final String name;
 
-	public SimpleSecurityContext(final String secretAccessKey) {
+	public SimpleSecurityContext(final String name, final String secretAccessKey) {
+		this.name = name;
 		this.secretAccessKey = secretAccessKey;
 	}
 
 	@Override
 	public String getSecretAccessKey() {
 		return secretAccessKey;
+	}
+
+	@Override
+	public String getName() {
+		return name;
 	}
 }

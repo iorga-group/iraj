@@ -16,6 +16,8 @@
  */
 package com.iorga.iraj.security;
 
-public interface SecurityContext {
+import java.security.Principal;
+
+public interface SecurityContext extends Principal {
 	public String getSecretAccessKey();
 }

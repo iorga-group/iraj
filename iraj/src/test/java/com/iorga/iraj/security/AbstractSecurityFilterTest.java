@@ -59,7 +59,7 @@ public class AbstractSecurityFilterTest {
 
 		public SecurityFilter(final String accessKeyId, final String secretAccessKey, final boolean handleDateShift) {
 			this.accessKeyId = accessKeyId;
-			this.simpleSecurityContext = new SimpleSecurityContext(secretAccessKey);
+			this.simpleSecurityContext = new SimpleSecurityContext(accessKeyId, secretAccessKey);
 			this.handleDateShift = handleDateShift;
 		}
 

@@ -2,11 +2,13 @@
   "name": "irajblank-web",
   "version": "0.0.1",
   "dependencies": {
-    "es5-shim": "~2.3.0",
-    "json3": "~3.3.0",
-    "jquery": "1.11.0",
-    "angular": "1.2.15",
-    "angular-route": "1.2.15",
+    "es5-shim": "~3.4.0",
+    "json3": "~3.3.1",
+    "respond": "1.4.2",
+    "html5shiv": "3.7.2",
+    "jquery": "1.11.1",
+    "angular": "1.2.16",
+    "angular-route": "1.2.16",
     "bootstrap-sass-official": "~3.1.1",
     "raaj-security-interceptor": "~1.2.0",
     "raaj-progress-interceptor": "~1.2.0",
@@ -14,35 +16,22 @@
     "raaj-message-service": "~1.2.0",
     "raaj-table-service": "~1.2.0"
   },
-  "resolutions": {
-    "angular": "1.2.15"
-  },
   "overrides": {
-  	"bootstrap-sass-official": {
-  		"main": [
-  			"vendor/assets/javascripts/bootstrap/affix.js",
-  			"vendor/assets/javascripts/bootstrap/alert.js",
-  			"vendor/assets/javascripts/bootstrap/button.js",
-			"vendor/assets/javascripts/bootstrap/carousel.js",
-			"vendor/assets/javascripts/bootstrap/transition.js",
-			"vendor/assets/javascripts/bootstrap/collapse.js",
-			"vendor/assets/javascripts/bootstrap/dropdown.js",
-			"vendor/assets/javascripts/bootstrap/modal.js",
-			"vendor/assets/javascripts/bootstrap/scrollspy.js",
-			"vendor/assets/javascripts/bootstrap/tab.js",
-			"vendor/assets/javascripts/bootstrap/tooltip.js",
-			"vendor/assets/javascripts/bootstrap/popover.js"
-  		]
-  	},
     "cryptojslib": {
-		"main": [
-			"rollups/md5.js",
-			"rollups/hmac-sha1.js",
-			"components/enc-base64-min.js"
-		]
-	},
-  	"es5-shim": {
-  		"main": []
-  	}
+      "main": [
+        "rollups/md5.js",
+        "rollups/hmac-sha1.js",
+        "components/enc-base64-min.js"
+      ]
+    },
+    "es5-shim": {
+      "main": []
+    },
+	"html5shiv": {
+      "main": []
+    },
+    "respond": {
+      "main": []
+    }
   }
 }

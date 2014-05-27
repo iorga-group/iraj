@@ -3,6 +3,8 @@
 	<head>
 		<meta charset="utf-8">
 		<title>IRAJ Blank Web</title>
+		<meta content="IE=edge" http-equiv="X-UA-Compatible">
+		<meta content="width=device-width, initial-scale=1" name="viewport">
 		<!-- build:css dist/styles/vendor.css -->
 		<!-- bower:css -->
 		<!-- endbower -->
@@ -12,6 +14,13 @@
 		<!-- injector:css -->
 		<!-- endinjector -->
 		<!-- endbuild -->
+		
+		<!--[if lt IE 9]>
+		    <script src="lib/html5shiv/dist/html5shiv.min.js"></script>
+		    <script src="lib/es5-shim/es5-shim.min.js"></script>
+			<script src="lib/json3/lib/json3.min.js"></script>
+      		<script src="lib/respond/dest/respond.min.js"></script>
+		<![endif]-->
 	</head>
 	<body>
 		<div ng-include="'templates/includes/menu.html'"></div>
@@ -19,18 +28,12 @@
 		<div ng-include="'templates/includes/login.html'"></div>
 		<div class="container" ng-view></div>
 		
-		<!--[if lte IE 8]>
-			<script src="lib/es5-shim/es5-shim.min.js"></script>
-			<script src="lib/json3/lib/json3.min.js"></script>
-		<![endif]-->
-		
 		<!-- build:js dist/scripts/vendor.js -->
 		<!-- bower:js -->
 		<!-- endbower -->
 		<!-- endbuild -->
 		
 		<script src="iraj/js/breadcrumbs-service.js"></script>
-		<script src="iraj/js/table-service.js"></script>
 		
 		<!-- build:js dist/scripts/app.js -->
 		<!-- injector:js -->

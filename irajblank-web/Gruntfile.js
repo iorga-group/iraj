@@ -3,7 +3,9 @@
 var path = require('path');
 
 module.exports = function (grunt) {
-	require('load-grunt-tasks')(grunt);
+	require('jit-grunt')(grunt, {
+		bower: 'grunt-bower-task'
+	});
 	require('time-grunt')(grunt);
 
 	grunt.initConfig({
@@ -26,7 +28,7 @@ module.exports = function (grunt) {
 			},
 			htmlindex: {
 				files: ['src/main/filtered-webapp/index.html'],
-				tasks: ['htmlhint:full','copy:index','bowerInstall','injector']
+				tasks: ['htmlhint:full','copy:index','wiredep','injector']
 			}
 		},
 		// Adds vendor prefixes in CSS when needed
@@ -50,25 +52,30 @@ module.exports = function (grunt) {
 			}
 		},
 		// Injects Bower dependencies directly in index.html
-		bowerInstall: {
+		wiredep: {
 			target: {
 				src: [
 					'src/main/webapp/index.html'
 				]
 			}
 		},
-	    // Empties folders to start fresh
-	    clean: {
-	      dist: {
-	        files: [{
-	          dot: true,
-	          src: [
-	            '.tmp'
-	          ]
-	        }]
-	      },
-	      server: '.tmp'
-	    },
+		// Empties folders to start fresh
+		clean: {
+			webapp: [
+				'src/main/webapp/lib',
+				'src/main/webapp/scripts',
+				'src/main/webapp/templates'
+			],
+			dist: {
+				files: [{
+					dot: true,
+					src: [
+						'.tmp'
+					]
+				}]
+			},
+			server: '.tmp'
+		},
 		// Uses Compass
 		compass: {
 			options: {
@@ -239,17 +246,19 @@ module.exports = function (grunt) {
 	});
 	
 	grunt.registerTask('serve', [
+		'clean:webapp',
 		'bower',
-	    'concurrent:server',
-		'bowerInstall',
+		'concurrent:server',
+		'wiredep',
 		'injector',
-	    'watch'
+		'watch'
 	]);
 
 	grunt.registerTask('build', [
-	    'bower',
-	    'concurrent:dist',
-		'bowerInstall',
+		'clean:webapp',
+		'bower',
+		'concurrent:dist',
+		'wiredep',
 		'injector',
 		'useminPrepare',
 		'autoprefixer',

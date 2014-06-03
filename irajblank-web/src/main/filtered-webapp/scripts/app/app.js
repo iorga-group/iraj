@@ -10,10 +10,10 @@ angular.module('blank-iraj', [
 		'raaj-progress-interceptor',
 		'raaj-table-service'
 	])
-	.config(function (irajProgressInterceptorProvider) {
-		irajProgressInterceptorProvider.setDefaultMessage('Chargement en cours...');
+	.config(function (raajProgressInterceptorProvider) {
+		raajProgressInterceptorProvider.setDefaultMessage('Chargement en cours...');
 	})
-	.config(function (irajMessageServiceProvider) {
-		irajMessageServiceProvider.setBootstrapVersion('3.x');
+	.config(function (raajMessageServiceProvider) {
+		raajMessageServiceProvider.setBootstrapVersion('3.x');
 	})
 ;

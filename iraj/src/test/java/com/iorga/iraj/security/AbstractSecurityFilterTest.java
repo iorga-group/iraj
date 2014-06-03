@@ -178,7 +178,7 @@ public class AbstractSecurityFilterTest {
 		final HttpServletRequest requestMock = new HttpServletRequestMockBuilder()
 			.body(new ByteArrayInputStream(requestBody.getBytes()))
 			.addHeader("Authorization", authorizationHeader)
-			.addHeader("X-IRAJ-Date", DateUtil.formatDate(currentAdditionalDate))
+			.addHeader("X-RAAJ-Date", DateUtil.formatDate(currentAdditionalDate))
 			.build();
 		final HttpServletResponse responseMock = mock(HttpServletResponse.class);
 		final FilterChain filterChainMock = mock(FilterChain.class);

@@ -25,7 +25,7 @@ import com.iorga.iraj.json.JsonWriter;
 public class JaxRsUtils {
 	private static final JsonWriter JSON_WRITER = new JsonWriter();
 
-	public static final String HEADER_PREFIX = "X-IRAJ-";
+	public static final String HEADER_PREFIX = "X-RAAJ-";
 	public static final String EXCEPTION_HEADER = HEADER_PREFIX+"Exception";
 
 	public static Response throwableToIrajResponse(final Class<?> templateClass, final Throwable throwable) {

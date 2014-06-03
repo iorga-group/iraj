@@ -1,13 +1,13 @@
 'use strict';
 
 angular.module('blank-iraj')
-.controller('UserSearchCtrl', function ($scope, $http, $location, irajTableService) {
+.controller('UserSearchCtrl', function ($scope, $http, $location, raajTableService) {
 	/// Action methods ///
 	/////////////////////
 
 	$scope.search = function() {
 		$scope.tableParams.page(1);
-		irajTableService.reloadLazyLoadingTable($scope.tableParams);
+		raajTableService.reloadLazyLoadingTable($scope.tableParams);
 	};
 
 	/// Initialization ///
@@ -16,7 +16,7 @@ angular.module('blank-iraj')
 		$scope.profileList = data.profileList;
 	});
 
-	irajTableService.initLazyLoadingTableWithSearchScopeAndHistory('tableParams', 'userForm', $scope, function(tableParams, callbackFn) {
+	raajTableService.initLazyLoadingTableWithSearchScopeAndHistory('tableParams', 'userForm', $scope, function(tableParams, callbackFn) {
 		$http.post('api/administration/userSearch/search', $scope.userForm).success(function (results) {
 			callbackFn(results);
 		});

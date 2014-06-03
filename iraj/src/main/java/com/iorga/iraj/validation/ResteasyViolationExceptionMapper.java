@@ -48,7 +48,7 @@ public class ResteasyViolationExceptionMapper implements ExceptionMapper<Resteas
 				JsonGenerator jsonGenerator = JSON_FACTORY.createJsonGenerator(outputStream);
 
 				jsonGenerator.writeStartObject();
-				jsonGenerator.writeArrayFieldStart("irajFieldMessages");
+				jsonGenerator.writeArrayFieldStart("raajFieldMessages");
 
 				List<ResteasyConstraintViolation> parameterViolations = exception.getParameterViolations();
 				for (ResteasyConstraintViolation violation : parameterViolations) {

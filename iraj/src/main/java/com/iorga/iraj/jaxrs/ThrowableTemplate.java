@@ -33,7 +33,7 @@ public class ThrowableTemplate {
 	private static Logger log = LoggerFactory.getLogger(ThrowableTemplate.class);
 
 	@TargetType(value = Iterable.class, parameterizedArguments = MessageTemplate.class)
-	public static Iterable<Throwable> getIrajMessages(final Throwable throwable) {
+	public static Iterable<Throwable> getRaajMessages(final Throwable throwable) {
 		return Lists.newArrayList(throwable);
 	}
 

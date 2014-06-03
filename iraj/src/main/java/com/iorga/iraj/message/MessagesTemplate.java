@@ -23,7 +23,7 @@ import com.iorga.iraj.annotation.ContextPath;
 @ContextParam(Messages.class)
 public class MessagesTemplate {
 	@ContextPath("fieldMessages")
-	private Iterable<FieldMessageTemplate> irajFieldMessages;
+	private Iterable<FieldMessageTemplate> raajFieldMessages;
 	@ContextPath("messages")
-	private Iterable<MessageTemplate> irajMessages;
+	private Iterable<MessageTemplate> raajMessages;
 }

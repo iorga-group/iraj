@@ -45,7 +45,7 @@ public class JavascriptTest {
 //				"	headers: {" +
 //				"		'Content-Type': 'text/plain'," +
 //				"		'Date': 'Mon, 22 Apr 2013 00:00:00 GMT'," +
-//				"		'X-IRAJ-Date': 'Thu, 01 Jan 1970 00:00:00 GMT'" +
+//				"		'X-RAAJ-Date': 'Thu, 01 Jan 1970 00:00:00 GMT'" +
 //				"	}," +
 //				"	ressource: '/'" +
 //				"};" +

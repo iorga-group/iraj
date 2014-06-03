@@ -34,9 +34,9 @@ public class ExceptionWithMessagesMapper implements ExceptionMapper<ExceptionWit
 	@ContextParam(ExceptionWithMessages.class)
 	public static class ExceptionWithMessagesTemplate {
 		@ContextPath("messages.fieldMessages")
-		private Iterable<FieldMessageTemplate> irajFieldMessages;
+		private Iterable<FieldMessageTemplate> raajFieldMessages;
 		@ContextPath("messages.messages")
-		private Iterable<MessageTemplate> irajMessages;
+		private Iterable<MessageTemplate> raajMessages;
 	}
 
 	@Override

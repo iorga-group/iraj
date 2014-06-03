@@ -151,7 +151,7 @@ public class AbstractSecurityFilterTest {
 			"2f7fb2f31c94658d3ac47fc1f4a6cde9\n" + // Body MD5
 			"text/plain\n" +	// content type
 			"Thu, 01 Jan 1970 00:00:00 GMT\n" +	// reference date (our forged ADDITIONAL_DATE_HEADER)
-			"x-iraj-date:Thu, 01 Jan 1970 00:00:00 GMT\n" +	// all the "x-iraj" headers
+			"x-raaj-date:Thu, 01 Jan 1970 00:00:00 GMT\n" +	// all the "x-raaj" headers
 			"/\n";	// the resource pathinfo + params
 		// Compute the authorization Header
 		final SecretKeySpec secretKeySpec = new SecretKeySpec(secretAccessKey.getBytes(UTF8_CHARSET), "HmacSHA1");
@@ -165,13 +165,13 @@ public class AbstractSecurityFilterTest {
 			> 2f7fb2f31c94658d3ac47fc1f4a6cde9
 			> text/plain
 			> Thu, 01 Jan 1970 00:00:00 GMT
-			> x-iraj-date:Thu, 01 Jan 1970 00:00:00 GMT
+			> x-raaj-date:Thu, 01 Jan 1970 00:00:00 GMT
 			> /
 			> " | openssl sha1 -binary -hmac "iLKJ8zhzU/5eEZFKeQ5bP+piXQ/JQr4+QKbORZP0" | base64
-			fWUiX2xF1+oSDIv7m+3cbo8Ve88=
+			SZyQh6nfvSiML9JUwgxFaRtglYA=
 		 */
 
-		final String signature = "fWUiX2xF1+oSDIv7m+3cbo8Ve88=";
+		final String signature = "SZyQh6nfvSiML9JUwgxFaRtglYA=";
 
 		final String authorizationHeader = "IWS "+accessKeyId+":"+signature;
 

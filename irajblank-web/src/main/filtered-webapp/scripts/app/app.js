@@ -2,8 +2,8 @@
 
 angular.module('blank-iraj', [
 		'ngRoute',
-		'raaj-authentication-service',
-		'raaj-security-interceptor',
+		'raajAuthenticationService',
+		'raajSecurityInterceptor',
 		'raaj-message-interceptor',
 		'raaj-message-service',
 		'iraj-breadcrumbs-service',

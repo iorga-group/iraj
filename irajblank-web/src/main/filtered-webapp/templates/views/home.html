@@ -1,1 +1,18 @@
 {{title}}
+
+<ul>
+	<li ng-repeat="file in fileList">
+		<a href="#" ng-click="download(file)">{{file}}</a>
+	</li>
+</ul>
+
+<form id="download" method="post">
+	<input type="hidden" name="fileName" />
+</form>
+
+<form id="upload" action="api/home/upload" method="post" enctype="multipart/form-data">
+	<p>
+		Select a file : <input type="file" name="uploadedFile" />
+	</p>
+	<input type="button" value="Upload It" ng-click="upload()" />
+</form>

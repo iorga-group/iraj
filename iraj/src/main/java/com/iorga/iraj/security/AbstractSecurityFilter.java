@@ -26,6 +26,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import javax.inject.Inject;
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
@@ -36,11 +37,13 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang3.StringUtils;
 import org.jboss.resteasy.util.DateUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.iorga.iraj.message.MessagesBuilder;
+import com.iorga.iraj.security.BypassSecurityTokenStore.TokenContext;
 
 
 /**
@@ -58,6 +61,9 @@ public abstract class AbstractSecurityFilter<S extends SecurityContext> implemen
 	final static TimeUnit TIME_SHIFT_ALLOWED_TIME_UNIT = TimeUnit.MINUTES;
 	final static long TIME_SHIFT_ALLOWED_MILLISECONDS = TimeUnit.MILLISECONDS.convert(TIME_SHIFT_ALLOWED_DURATION, TIME_SHIFT_ALLOWED_TIME_UNIT);
 
+	@Inject
+	private BypassSecurityTokenStore bypassSecurityTokenStore;
+
 	@Override
 	public void init(final FilterConfig filterConfig) throws ServletException {
 		// Nothing to do
@@ -68,50 +74,85 @@ public abstract class AbstractSecurityFilter<S extends SecurityContext> implemen
 		// Extraction of the authentication header
 		final HttpServletRequest httpRequest = (HttpServletRequest)request;
 		final HttpServletResponse httpResponse = (HttpServletResponse)response;
-		final String authorizationHeader = httpRequest.getHeader(SecurityUtils.AUTHORIZATION_HEADER_NAME);
-		if (authorizationHeader == null) {
-			sendError(HttpServletResponse.SC_UNAUTHORIZED, "Need "+SecurityUtils.AUTHORIZATION_HEADER_NAME+" header", httpResponse);
-		} else {
-			final Matcher matcher = AUTHORIZATION_HEADER_PATTERN.matcher(authorizationHeader);
-			if (matcher.find()) {
-				final String accessKeyId = matcher.group(1);
-				final String signature = matcher.group(2);
-				String date = httpRequest.getHeader("Date");
-				// Handle the additional date header
-				final String additionalDate = httpRequest.getHeader(SecurityUtils.ADDITIONAL_DATE_HEADER_NAME);
-				if (additionalDate != null) {
-					date = additionalDate;
-				}
-				try {
+
+		// First test if we will by pass the security with a token
+		String bypassSecurityToken = httpRequest.getHeader(SecurityUtils.ADDITIONAL_BYPASS_SECURITY_TOKEN_HEADER_NAME);
+		if (StringUtils.isEmpty(bypassSecurityToken)) {
+			// check in the parameters
+			bypassSecurityToken = httpRequest.getParameter(SecurityUtils.ADDITIONAL_BYPASS_SECURITY_TOKEN_HEADER_NAME);
+		}
+		if (StringUtils.isNotEmpty(bypassSecurityToken)) {
+			// bypass security check
+			String[] tokenParts = bypassSecurityToken.split(":");
+			if (tokenParts.length != 2) {
+				sendError(HttpServletResponse.SC_BAD_REQUEST, "Wrong token format", httpResponse);
+			}
+			String accessKeyId = tokenParts[0];
+			String token = tokenParts[1];
+			try {
+				final TokenContext tokenContext = bypassSecurityTokenStore.removeToken(token);
+				if (StringUtils.equals(accessKeyId, tokenContext.getPrincipalName())) {
 					final S securityContext = findSecurityContext(accessKeyId);
 					if (securityContext != null) {
-						if (handleParsedDate(DateUtil.parseDate(date), securityContext, httpRequest, httpResponse)) {
-							// Let's process the signature in order to compare it
-							final String secretAccessKey = securityContext.getSecretAccessKey();
-							try {
-								final MultiReadHttpServletRequest multiReadHttpRequest = new MultiReadHttpServletRequest(httpRequest);
-								final String serverSignature = SecurityUtils.computeSignature(secretAccessKey, new HttpServletRequestToSign(multiReadHttpRequest));
-								if (serverSignature.equalsIgnoreCase(signature)) {
-									doFilterWhenSecurityOK(httpRequest, httpResponse, chain, multiReadHttpRequest, accessKeyId, securityContext);
-								} else {
-									rejectSignature(signature, serverSignature, httpResponse);
-								}
-							} catch (final NoSuchAlgorithmException e) {
-								throw new ServletException(e);
-							} catch (final InvalidKeyException e) {
-								sendError(HttpServletResponse.SC_BAD_REQUEST, "Invalid key", httpResponse, e);
-							}
-						}
+						// marking the request in order to filter it out later
+						httpRequest.setAttribute(SecurityUtils.SECURITY_BYPASSED_BY_TOKEN_ATTRIBUTE_NAME, Boolean.TRUE);
+						doFilterWhenSecurityOK(httpRequest, httpResponse, chain, accessKeyId, securityContext);
 					} else {
 						rejectAccessKeyId(accessKeyId, httpResponse);
 					}
-				} catch (final ParseException e) {
-					sendError(HttpServletResponse.SC_BAD_REQUEST, "Invalid date", httpResponse, "Have to parse '"+date+"'", e);
-				} finally {
-					doFinallyAfterFindSecurityContext();
+				} else {
+					sendError(HttpServletResponse.SC_BAD_REQUEST, "Token is not yours", httpResponse);
 				}
+			} catch (Exception e) {
+				sendError(HttpServletResponse.SC_BAD_REQUEST, "Invalid token", httpResponse, e);
+			}
+		} else {
+			// classical security check
+			final String authorizationHeader = httpRequest.getHeader(SecurityUtils.AUTHORIZATION_HEADER_NAME);
+			if (authorizationHeader == null) {
+				sendError(HttpServletResponse.SC_UNAUTHORIZED, "Need "+SecurityUtils.AUTHORIZATION_HEADER_NAME+" header", httpResponse);
 			} else {
-				sendError(HttpServletResponse.SC_BAD_REQUEST, "Request incorrectly formated", httpResponse, "Got "+authorizationHeader);
+				final Matcher matcher = AUTHORIZATION_HEADER_PATTERN.matcher(authorizationHeader);
+				if (matcher.find()) {
+					final String accessKeyId = matcher.group(1);
+					final String signature = matcher.group(2);
+					String date = httpRequest.getHeader("Date");
+					// Handle the additional date header
+					final String additionalDate = httpRequest.getHeader(SecurityUtils.ADDITIONAL_DATE_HEADER_NAME);
+					if (additionalDate != null) {
+						date = additionalDate;
+					}
+					try {
+						final S securityContext = findSecurityContext(accessKeyId);
+						if (securityContext != null) {
+							if (handleParsedDate(DateUtil.parseDate(date), securityContext, httpRequest, httpResponse)) {
+								// Let's process the signature in order to compare it
+								final String secretAccessKey = securityContext.getSecretAccessKey();
+								try {
+									final MultiReadHttpServletRequest multiReadHttpRequest = new MultiReadHttpServletRequest(httpRequest);
+									final String serverSignature = SecurityUtils.computeSignature(secretAccessKey, new HttpServletRequestToSign(multiReadHttpRequest));
+									if (serverSignature.equalsIgnoreCase(signature)) {
+										doFilterWhenSecurityOK(multiReadHttpRequest, httpResponse, chain, accessKeyId, securityContext);
+									} else {
+										rejectSignature(signature, serverSignature, httpResponse);
+									}
+								} catch (final NoSuchAlgorithmException e) {
+									throw new ServletException(e);
+								} catch (final InvalidKeyException e) {
+									sendError(HttpServletResponse.SC_BAD_REQUEST, "Invalid key", httpResponse, e);
+								}
+							}
+						} else {
+							rejectAccessKeyId(accessKeyId, httpResponse);
+						}
+					} catch (final ParseException e) {
+						sendError(HttpServletResponse.SC_BAD_REQUEST, "Invalid date", httpResponse, "Have to parse '"+date+"'", e);
+					} finally {
+						doFinallyAfterFindSecurityContext();
+					}
+				} else {
+					sendError(HttpServletResponse.SC_BAD_REQUEST, "Request incorrectly formated", httpResponse, "Got "+authorizationHeader);
+				}
 			}
 		}
 	}
@@ -129,9 +170,9 @@ public abstract class AbstractSecurityFilter<S extends SecurityContext> implemen
 	 */
 	protected abstract S findSecurityContext(String accessKeyId);
 
-	protected void doFilterWhenSecurityOK(final HttpServletRequest httpRequest, final HttpServletResponse httpResponse, final FilterChain chain, final MultiReadHttpServletRequest multiReadHttpRequest, final String accessKeyId, final S securityContext) throws IOException, ServletException {
+	protected void doFilterWhenSecurityOK(final HttpServletRequest httpRequest, final HttpServletResponse httpResponse, final FilterChain chain, final String accessKeyId, final S securityContext) throws IOException, ServletException {
 		// By default, security OK, forward to next filter
-		chain.doFilter(new HttpServletRequestWrapper(multiReadHttpRequest) {
+		chain.doFilter(new HttpServletRequestWrapper(httpRequest) {
 			@Override
 			public Principal getUserPrincipal() {
 				return securityContext;

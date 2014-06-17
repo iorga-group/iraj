@@ -45,6 +45,8 @@ public class SecurityUtils {
 	public static final String AUTHORIZATION_HEADER_NAME = "Authorization";
 	public static final String ADDITIONAL_HEADER_PREFIX = JaxRsUtils.HEADER_PREFIX;
 	public static final String ADDITIONAL_DATE_HEADER_NAME = ADDITIONAL_HEADER_PREFIX+"Date";
+	public static final String ADDITIONAL_BYPASS_SECURITY_TOKEN_HEADER_NAME = ADDITIONAL_HEADER_PREFIX+"Bypass-Security-Token";
+	public static final String SECURITY_BYPASSED_BY_TOKEN_ATTRIBUTE_NAME = ADDITIONAL_HEADER_PREFIX+"Security-Bypassed-By-Token";
 	public static final String AUTHORIZATION_HEADER_VALUE_PREFIX = "IWS";
 
 	private static final Logger log = LoggerFactory.getLogger(SecurityUtils.class);
